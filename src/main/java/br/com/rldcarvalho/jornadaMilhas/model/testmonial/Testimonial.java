@@ -15,6 +15,13 @@ public class Testimonial {
     private String imagePath;
     private boolean active;
 
+    public Testimonial(TestimonialCreateData testimonialCreateData){
+        this.active = true;
+        this.personName = testimonialCreateData.personName();
+        this.testimonialText = testimonialCreateData.testimonialText();
+        this.imagePath = testimonialCreateData.imagePath();
+    }
+
     public Testimonial() {
     }
 
