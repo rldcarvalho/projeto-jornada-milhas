@@ -39,6 +39,10 @@ public class Testimonial {
         this.imagePath = testimonialSimpleData.imagePath();
     }
 
+    public void delete(){
+        this.active = false;
+    }
+
     public Long getId() {
         return id;
     }

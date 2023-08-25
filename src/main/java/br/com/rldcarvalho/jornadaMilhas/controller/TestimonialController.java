@@ -54,4 +54,20 @@ public class TestimonialController {
         testimonial.dataUpdate(testimonialSimpleData);
         return ResponseEntity.ok().body(new TestimonialDetailData(testimonial));
     }
+
+    @DeleteMapping(value = "/{id}")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteTestimonial(@PathVariable Long id){
+        Optional<Testimonial> data = repository.findById(id);
+        if (data.isEmpty()){
+            throw new EntityNotFoundException("Testimonial id not found");
+        }
+        Testimonial testimonial = data.get();
+        testimonial.delete();
+
+        return ResponseEntity.noContent().build();
+
+    }
+
 }
