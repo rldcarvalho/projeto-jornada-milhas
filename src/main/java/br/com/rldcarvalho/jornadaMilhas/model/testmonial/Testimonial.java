@@ -15,11 +15,11 @@ public class Testimonial {
     private String imagePath;
     private boolean active;
 
-    public Testimonial(TestimonialCreateData testimonialCreateData){
+    public Testimonial(TestimonialSimpleData testimonialSimpleData){
         this.active = true;
-        this.personName = testimonialCreateData.personName();
-        this.testimonialText = testimonialCreateData.testimonialText();
-        this.imagePath = testimonialCreateData.imagePath();
+        this.personName = testimonialSimpleData.personName();
+        this.testimonialText = testimonialSimpleData.testimonialText();
+        this.imagePath = testimonialSimpleData.imagePath();
     }
 
     public Testimonial() {
@@ -31,6 +31,12 @@ public class Testimonial {
         this.testimonialText = testimonialText;
         this.imagePath = imagePath;
         this.active = active;
+    }
+
+    public void dataUpdate(TestimonialSimpleData testimonialSimpleData) {
+        this.personName = testimonialSimpleData.personName();
+        this.testimonialText = testimonialSimpleData.testimonialText();
+        this.imagePath = testimonialSimpleData.imagePath();
     }
 
     public Long getId() {

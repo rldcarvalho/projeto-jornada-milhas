@@ -1,6 +1,6 @@
 package br.com.rldcarvalho.jornadaMilhas.model.testmonial;
 
-public record TestimonialCreateData(
+public record TestimonialSimpleData(
         String personName,
         String testimonialText,
         String imagePath
