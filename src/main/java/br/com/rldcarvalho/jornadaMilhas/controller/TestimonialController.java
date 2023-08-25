@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/depoimentos")
@@ -33,5 +34,10 @@ public class TestimonialController {
 
         return ResponseEntity.created(uri).body(testimonialDetailData);
 
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TestimonialDetailData>> getAllTestimonial(){
+        return ResponseEntity.ok(repository.findAll().stream().filter(testimonial -> testimonial.isActive()).map(TestimonialDetailData::new).toList());
     }
 }
