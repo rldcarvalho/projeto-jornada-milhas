@@ -25,12 +25,12 @@ public class Testimonial {
     public Testimonial() {
     }
 
-    public Testimonial(Long id, String personName, String testimonialText, String imagePath, boolean active) {
+    public Testimonial(Long id, String personName, String testimonialText, String imagePath) {
         this.id = id;
         this.personName = personName;
         this.testimonialText = testimonialText;
         this.imagePath = imagePath;
-        this.active = active;
+        this.active = true;
     }
 
     public void dataUpdate(TestimonialSimpleData testimonialSimpleData) {
