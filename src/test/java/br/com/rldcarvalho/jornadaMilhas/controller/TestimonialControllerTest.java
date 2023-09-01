@@ -21,12 +21,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -116,5 +116,43 @@ class TestimonialControllerTest {
         assertThat(response.getContentAsString()).isEqualTo(json);
     }
 
+    @Test
+    @DisplayName("Should return status OK even when there are no testimonials registered in the database")
+    void getRandomTestimonials() throws Exception
+    {
+        MockHttpServletResponse response = mockMvc.perform(get("/depoimentos-home"))
+                .andReturn()
+                .getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("Should return status OK and updated TestimonialDetailData when request body is valid")
+    void testUpdateStatusCodeOK() throws Exception {
+        Testimonial testimonial = GenerateData.randomTestimonial();
+        Testimonial updatedTestimonial = GenerateData.randomTestimonial();
+
+        TestimonialSimpleData data = new TestimonialSimpleData(updatedTestimonial.getPersonName(),
+                updatedTestimonial.getTestimonialText(), updatedTestimonial.getImagePath());
+        String requestJson = testimonialSimpleData.write(data).getJson();
+
+        TestimonialDetailData updatedData = new TestimonialDetailData(testimonial.getId(), updatedTestimonial.getPersonName(),
+                updatedTestimonial.getTestimonialText(), updatedTestimonial.getImagePath()
+        );
+        String responseJson = testimonialDetailData.write(updatedData).getJson();
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(testimonial));
+
+        MockHttpServletResponse response = mockMvc
+                .perform(put("/depoimentos/{id}", testimonial.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isEqualTo(responseJson);
+
+    }
 
 }
