@@ -19,8 +19,13 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
@@ -33,6 +38,9 @@ class TestimonialControllerTest {
 
     @Autowired
     private JacksonTester<TestimonialDetailData> testimonialDetailData;
+
+    @Autowired
+    private JacksonTester<List<TestimonialDetailData>> testimonialDetailDataList;
 
     @Autowired
     private JacksonTester<TestimonialSimpleData> testimonialSimpleData;
@@ -62,7 +70,7 @@ class TestimonialControllerTest {
 
     @Test
     @DisplayName("Should return 400 http code when data submitted are invalid")
-    void testPostTestinomialBadRequest() throws Exception {
+    void testPostTestimonialBadRequest() throws Exception {
         TestimonialSimpleData data = new TestimonialSimpleData(null, null,null);
         String json = testimonialSimpleData.write(data).getJson();
 
@@ -72,5 +80,41 @@ class TestimonialControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
+
+    @Test
+    @DisplayName("Should return json with a list of Testimonials and status 200")
+    void testGetAllTestimonial() throws Exception {
+        List<Testimonial> testimonials = GenerateData.randomTestimonialList(5);
+
+        Mockito.when(repository.findAll()).thenReturn(testimonials);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/depoimentos")).andReturn().getResponse();
+
+        List<TestimonialDetailData> data = testimonials.stream().map(TestimonialDetailData::new).collect(Collectors.toList());
+        String json = testimonialDetailDataList.write(data).getJson();
+
+        assertThat(response.getContentAsString()).isEqualTo(json);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+
+    }
+
+    @Test
+    @DisplayName("Should return empty list of TestimonialDetailRecord and status OK")
+    void testGetAllStatusEmptyContent() throws Exception {
+        List<Testimonial> data = Collections.<Testimonial>emptyList();
+
+        Mockito.when(repository.findAll()).thenReturn(data);
+
+        MockHttpServletResponse response = mockMvc
+                .perform(get("/depoimentos"))
+                .andReturn().getResponse();
+
+        List<TestimonialDetailData> record = Collections.<TestimonialDetailData>emptyList();
+        String json = testimonialDetailDataList.write(record).getJson();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isEqualTo(json);
+    }
+
 
 }
