@@ -154,5 +154,39 @@ class TestimonialControllerTest {
         assertThat(response.getContentAsString()).isEqualTo(responseJson);
 
     }
+    @Test
+    @DisplayName("Should return status BAD REQUEST when data submitted are invalid")
+    void testUpdateStatusCodeBadRequest() throws Exception {
+        TestimonialSimpleData data = new TestimonialSimpleData(null, null,  null);
+        String json = testimonialSimpleData.write(data).getJson();
+
+        Testimonial testimonial = GenerateData.randomTestimonial();
+        Mockito.when(repository.getReferenceById(any())).thenReturn(testimonial);
+
+        MockHttpServletResponse response = mockMvc
+                .perform(put("/depoimentos/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+
+    }
+
+    @Test
+    @DisplayName("Should return status NO CONTENT when id chosen in the path is found")
+    void testDeleteStatusCodeNoContent() throws Exception {
+
+        Testimonial testimonial = GenerateData.randomTestimonial();
+
+        Mockito.when(repository.findById(any())).thenReturn(Optional.of(testimonial));
+
+        MockHttpServletResponse response = mockMvc
+                .perform(delete("/depoimentos/{id}", testimonial.getId()))
+                .andReturn()
+                .getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
 
 }
