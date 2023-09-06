@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -187,6 +188,20 @@ class TestimonialControllerTest {
                 .getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(testimonial.isActive()).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should return 404 when testimonial ID is not found")
+    void testDeleteNonExistentEntity() throws Exception {
+
+        Long idToDelete = 2L;
+
+        Mockito.when(repository.findById(idToDelete)).thenReturn(Optional.empty());
+
+        mockMvc
+                .perform(delete("/depoimentos/{id}", idToDelete))
+                .andExpect(status().isNotFound());
     }
 
 }

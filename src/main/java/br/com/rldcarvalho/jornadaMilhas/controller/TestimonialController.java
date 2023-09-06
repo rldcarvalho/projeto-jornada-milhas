@@ -1,8 +1,8 @@
 package br.com.rldcarvalho.jornadaMilhas.controller;
 
 import br.com.rldcarvalho.jornadaMilhas.model.testmonial.Testimonial;
-import br.com.rldcarvalho.jornadaMilhas.model.testmonial.TestimonialSimpleData;
 import br.com.rldcarvalho.jornadaMilhas.model.testmonial.TestimonialDetailData;
+import br.com.rldcarvalho.jornadaMilhas.model.testmonial.TestimonialSimpleData;
 import br.com.rldcarvalho.jornadaMilhas.repository.TestimonialRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -67,7 +67,7 @@ public class TestimonialController {
     public ResponseEntity<Void> deleteTestimonial(@PathVariable Long id){
         Optional<Testimonial> data = repository.findById(id);
         if (data.isEmpty()){
-            throw new EntityNotFoundException("Testimonial id not found");
+            return ResponseEntity.notFound().build();
         }
         Testimonial testimonial = data.get();
         testimonial.delete();
