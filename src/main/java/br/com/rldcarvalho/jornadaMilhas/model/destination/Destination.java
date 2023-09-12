@@ -1,6 +1,7 @@
 package br.com.rldcarvalho.jornadaMilhas.model.destination;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -24,6 +25,13 @@ public class Destination {
         this.name = name;
         this.photoPath = photoPath;
         this.price = price;
+        this.active = true;
+    }
+
+    public Destination(@Valid DestinationSimpleData destinationSimpleData){
+        this.name = destinationSimpleData.name();
+        this.photoPath = destinationSimpleData.photo();
+        this.price = destinationSimpleData.price();
         this.active = true;
     }
 
