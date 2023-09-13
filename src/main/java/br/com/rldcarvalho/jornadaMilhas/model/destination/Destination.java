@@ -30,9 +30,19 @@ public class Destination {
 
     public Destination(@Valid DestinationSimpleData destinationSimpleData){
         this.name = destinationSimpleData.name();
-        this.photoPath = destinationSimpleData.photo();
+        this.photoPath = destinationSimpleData.photoPath();
         this.price = destinationSimpleData.price();
         this.active = true;
+    }
+
+    public void dataUpdate(@Valid DestinationSimpleData destinationDetailData) {
+        this.name = destinationDetailData.name();
+        this.photoPath = destinationDetailData.photoPath();
+        this.price = destinationDetailData.price();
+    }
+
+    public void delete(){
+        this.active = false;
     }
 
     public Long getId() {

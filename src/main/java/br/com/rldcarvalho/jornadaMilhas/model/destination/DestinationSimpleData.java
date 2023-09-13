@@ -10,7 +10,7 @@ public record DestinationSimpleData(
         @NotBlank
         String name,
         @NotBlank
-        String photo,
+        String photoPath,
         @DecimalMin(value = "0.0", inclusive = false)
         @Digits(integer = 5, fraction=2)
         BigDecimal price
