@@ -1,8 +1,10 @@
 package br.com.rldcarvalho.jornadaMilhas;
 
+import br.com.rldcarvalho.jornadaMilhas.model.destination.Destination;
 import br.com.rldcarvalho.jornadaMilhas.model.testmonial.Testimonial;
 import net.datafaker.Faker;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,5 +24,18 @@ public class GenerateData {
 
     public static List<Testimonial> randomTestimonialList(int count){
         return Stream.generate(GenerateData::randomTestimonial).limit(count).collect(Collectors.toList());
+    }
+
+    public static Destination randomDestination(){
+        return new Destination(
+            faker.random().nextLong(),
+            faker.address().cityName(),
+            faker.internet().url(),
+            new BigDecimal(500)
+        );
+    }
+
+    public static List<Destination> randomDestinationList(int count){
+        return Stream.generate(GenerateData::randomDestination).limit(count).collect(Collectors.toList());
     }
 }
