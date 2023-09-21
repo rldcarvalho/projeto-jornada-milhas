@@ -15,15 +15,21 @@ public class Destination {
     private Long id;
     private String name;
     private String photoPath;
+    private String photoPath2;
+    private String meta;
+    private String description;
     private BigDecimal price;
     private boolean active;
 
     public Destination() {}
 
-    public Destination(Long id, String name, String photoPath, BigDecimal price) {
+    public Destination(Long id, String name, String photoPath, String photoPath2, String meta, String description, BigDecimal price) {
         this.id = id;
         this.name = name;
         this.photoPath = photoPath;
+        this.photoPath2 = photoPath2;
+        this.meta = meta;
+        this.description = description;
         this.price = price;
         this.active = true;
     }
@@ -31,6 +37,9 @@ public class Destination {
     public Destination(@Valid DestinationSimpleData destinationSimpleData){
         this.name = destinationSimpleData.name();
         this.photoPath = destinationSimpleData.photoPath();
+        this.photoPath2 = destinationSimpleData.photoPath2();
+        this.meta = destinationSimpleData.meta();
+        this.description = destinationSimpleData.description();
         this.price = destinationSimpleData.price();
         this.active = true;
     }
@@ -38,6 +47,9 @@ public class Destination {
     public void dataUpdate(@Valid DestinationSimpleData destinationDetailData) {
         this.name = destinationDetailData.name();
         this.photoPath = destinationDetailData.photoPath();
+        this.photoPath2 = destinationDetailData.photoPath2();
+        this.meta = destinationDetailData.meta();
+        this.description = destinationDetailData.description();
         this.price = destinationDetailData.price();
     }
 
@@ -55,6 +67,18 @@ public class Destination {
 
     public String getPhotoPath() {
         return photoPath;
+    }
+
+    public String getPhotoPath2() {
+        return photoPath2;
+    }
+
+    public String getMeta() {
+        return meta;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public BigDecimal getPrice() {

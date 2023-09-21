@@ -31,6 +31,9 @@ public class GenerateData {
             faker.random().nextLong(),
             faker.address().cityName(),
             faker.internet().url(),
+            faker.internet().url(),
+            faker.lorem().characters(1, 160, true, true, true),
+            faker.lorem().paragraph(2),
             new BigDecimal(500)
         );
     }

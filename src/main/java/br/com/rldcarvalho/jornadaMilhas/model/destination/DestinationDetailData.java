@@ -6,6 +6,9 @@ public record DestinationDetailData(
         Long id,
         String name,
         String photoPath,
+        String photoPath2,
+        String meta,
+        String description,
         BigDecimal price
 ) {
     public DestinationDetailData(Destination destination) {
@@ -13,6 +16,9 @@ public record DestinationDetailData(
             destination.getId(),
             destination.getName(),
             destination.getPhotoPath(),
+            destination.getPhotoPath2(),
+            destination.getMeta(),
+            destination.getDescription(),
             destination.getPrice()
         );
     }

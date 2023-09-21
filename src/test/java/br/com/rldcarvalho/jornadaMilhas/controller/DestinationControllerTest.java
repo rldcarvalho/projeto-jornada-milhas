@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +56,9 @@ class DestinationControllerTest {
         DestinationSimpleData data = new DestinationSimpleData(
                 destination.getName(),
                 destination.getPhotoPath(),
+                destination.getPhotoPath2(),
+                destination.getMeta(),
+                destination.getDescription(),
                 destination.getPrice()
         );
         String json = destinationSimpleData.write(data).getJson();
@@ -73,7 +75,7 @@ class DestinationControllerTest {
     @Test
     @DisplayName("Should return HTTP status 400 when submitted data is invalid")
     void testPostDestinationBadRequest() throws Exception {
-        DestinationSimpleData data = new DestinationSimpleData(null, null, null);
+        DestinationSimpleData data = new DestinationSimpleData(null, null, null, null, null, null);
         String json = destinationSimpleData.write(data).getJson();
 
         MockHttpServletResponse response = mockMvc.perform(post("/destinos")
@@ -138,6 +140,9 @@ class DestinationControllerTest {
         DestinationSimpleData data = new DestinationSimpleData(
                 updatedDestination.getName(),
                 updatedDestination.getPhotoPath(),
+                updatedDestination.getPhotoPath2(),
+                updatedDestination.getMeta(),
+                updatedDestination.getDescription(),
                 updatedDestination.getPrice()
         );
         String requestJson = destinationSimpleData.write(data).getJson();
@@ -146,6 +151,9 @@ class DestinationControllerTest {
                 destination.getId(),
                 updatedDestination.getName(),
                 updatedDestination.getPhotoPath(),
+                updatedDestination.getPhotoPath2(),
+                updatedDestination.getMeta(),
+                updatedDestination.getDescription(),
                 updatedDestination.getPrice()
         );
         String responseJson = destinationDetailData.write(updatedData).getJson();
@@ -165,7 +173,7 @@ class DestinationControllerTest {
     @Test
     @DisplayName("Should return BAD REQUEST status when submitted data is invalid")
     void testUpdateStatusCodeBadRequest() throws Exception {
-        DestinationSimpleData data = new DestinationSimpleData(null, null, null);
+        DestinationSimpleData data = new DestinationSimpleData(null, null, null, null, null, null);
         String json = destinationSimpleData.write(data).getJson();
 
         Destination destination = GenerateData.randomDestination();
