@@ -1,4 +1,4 @@
-package br.com.rldcarvalho.jornadaMilhas.infra.security;
+package br.com.rldcarvalho.jornadaMilhas.security;
 
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

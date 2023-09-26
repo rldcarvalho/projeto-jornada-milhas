@@ -1,5 +1,6 @@
 package br.com.rldcarvalho.jornadaMilhas.model.destination;
 
+import br.com.rldcarvalho.jornadaMilhas.services.DescriptionGenerationService;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 
@@ -55,6 +56,16 @@ public class Destination {
 
     public void delete(){
         this.active = false;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void generateDescriptionIfNeeded() {
+        if (this.description == null || this.description.isEmpty()){
+            DescriptionGenerationService service = new DescriptionGenerationService();
+            this.description = service.generateDescription(this);
+        }
+
     }
 
     public Long getId() {
