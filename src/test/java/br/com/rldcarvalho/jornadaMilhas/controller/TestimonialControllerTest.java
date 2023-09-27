@@ -129,6 +129,34 @@ class TestimonialControllerTest {
     }
 
     @Test
+    @DisplayName("Should return JSON with the searched destination and status OK")
+    void testGetTestimonialById() throws Exception {
+        List<Testimonial> testimonials = GenerateData.randomTestimonialList(5);
+        Testimonial testimonialToFind = testimonials.get(2);
+        String expectedJson = testimonialDetailData.write(new TestimonialDetailData(testimonialToFind)).getJson();
+
+        Mockito.when(repository.findByIdAndActive(testimonialToFind.getId())).thenReturn(Optional.of(testimonialToFind));
+
+        MockHttpServletResponse response = mockMvc.perform(get("/depoimentos/{id}", testimonialToFind.getId()))
+                .andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isEqualTo(expectedJson);
+    }
+
+    @Test
+    @DisplayName("Should return NOT FOUND status when the searched id is not found")
+    void testGetByIdStatusEmptyContent() throws Exception {
+        Mockito.when(repository.findByIdAndActive(any())).thenReturn(Optional.empty());
+
+        MockHttpServletResponse response = mockMvc
+                .perform(get("/depoimentos/1"))
+                .andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
     @DisplayName("Should return status OK and updated TestimonialDetailData when request body is valid")
     void testUpdateStatusCodeOK() throws Exception {
         Testimonial testimonial = GenerateData.randomTestimonial();

@@ -27,7 +27,7 @@ public class TestimonialController {
     @PostMapping(value = "/depoimentos")
     @Transactional
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity postTestimonial(@RequestBody @Valid TestimonialSimpleData testimonialSimpleData, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<TestimonialDetailData> postTestimonial(@RequestBody @Valid TestimonialSimpleData testimonialSimpleData, UriComponentsBuilder uriBuilder){
 
         Testimonial testimonial = repository.save(new Testimonial(testimonialSimpleData));
 
@@ -40,17 +40,28 @@ public class TestimonialController {
     }
 
     @GetMapping(value = "/depoimentos")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<TestimonialDetailData>> getAllTestimonial(){
         return ResponseEntity.ok(repository.findAll().stream().filter(Testimonial::isActive).map(TestimonialDetailData::new).toList());
     }
 
     @GetMapping(value = "/depoimentos-home")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<TestimonialDetailData>> getRandomTestimonial(){
         return ResponseEntity.ok(repository.findRandomTestimonials().stream().map(TestimonialDetailData::new).toList());
     }
 
+    @GetMapping(value = "/depoimentos/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<TestimonialDetailData> getTestimonialById(@PathVariable Long id){
+        Optional<Testimonial> testimonial = repository.findByIdAndActive(id);
+
+        return testimonial.map(value -> ResponseEntity.ok().body(new TestimonialDetailData(value))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PutMapping(value = "/depoimentos/{id}")
     @Transactional
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<TestimonialDetailData> updateTestimonial(@PathVariable Long id, @RequestBody @Valid TestimonialSimpleData testimonialSimpleData){
         Optional<Testimonial> data = repository.findById(id);
         if (data.isEmpty()){
