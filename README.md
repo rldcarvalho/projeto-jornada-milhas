@@ -69,6 +69,9 @@ Retorna todas os depoimentos cadastrados.
 GET ```/depoimentos-home```
 Retorna três depoimentos aleatórios cadastrados.
 
+GET ```/depoimentos/{id}```
+Retorna o depoimento cujo id for informado no endereço.
+
 PUT ```/depoimentos/{id}```
 Atualiza o depoimento cujo id for informado no endereço.
 
