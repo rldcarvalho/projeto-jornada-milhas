@@ -1,4 +1,4 @@
-# API para o site turístico Jornada Milhas
+# API Jornada Milhas 
 
 <p align="center">
   <img src="https://img.shields.io/static/v1?label=spring&message=3.1.2&color=blue&style=for-the-badge&logo=SPRING"/>
@@ -11,87 +11,273 @@
    <img src="http://img.shields.io/static/v1?label=STATUS&message=CONCLUIDO&color=GREEN&style=for-the-badge"/>
 </p>
 
-### Descrição do Projeto
+## Descrição do Projeto
 
 Essa é uma **API REST** que atua como backend para a plataforma de turismo "Jornada Milhas". Permite operações *CRUD* (Create, Read, Update, Delete) para destinos e depoimentos, atendendo às necessidades do domínio.
 
-A aplicação foi desenvolvida em **Java 17** utilizando o ecossistema **Spring Framework**, notavelmente o **Spring Boot 3.1.2**. O banco de dados é o **MySQL**. Integra-se à API da **OpenAI** (usando **ChatGPT 3.5**) para gerar descrições atraentes dos destinos.
+### Tecnologias Utilizadas:
 
-Além disso, foi implementado o uso do **Docker**, facilitando a distribuição e execução da aplicação em ambientes consistentes. Os testes são realizados com **JUnit 5**, **MockMVC**, e **Mockito**, garantindo a confiabilidade do código.
+| Descrição              | Tecnologia                                                                                                                                                                    |
+|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Linguagem              | [Java](https://www.java.com/)                                                                                                                                                 |
+| Framework              | [Spring Boot](https://spring.io/)                                                                                                                                             |
+| Banco de Dados         | [MySQL](https://www.mysql.com/)                                                                                                                                               |
+| Ferramenta de Migração | [Flywaydb](https://flywaydb.org/)                                                                                                                                             |
+| Documentação           | [SpringDoc Swagger](https://springdoc.org/)                                                                                                                                   |
+| Testes Unitários       | [Junit](https://junit.org/junit5/), [Mockito](https://site.mockito.org/), [MockMvc](https://docs.spring.io/spring-framework/reference/testing/spring-mvc-test-framework.html) |
+| Integração             | [OpenAI Java](https://github.com/TheoKanning/openai-java)                                                                                                                     |
+| Outras Bibliotecas     | [DataFaker Java](https://github.com/datafaker-net/datafaker)                                                                                                                  |
+| Conteinerização        | [Docker](https://www.docker.com/)                                                                                                                                             |
+| Ferramenta de Build    | [Apache Maven](https://maven.apache.org/)                                                                                                                                     |
+| Editor de Código       | [Intellij](https://www.jetbrains.com/idea/)                                                                                                                                   |
+| Versionamento          | [Git](https://git-scm.com/)                                                                                                                                                   |
 
-A documentação da API é feita com **Swagger**, simplificando a visualização e teste dos endpoints. Siga a documentação para utilizar a API de forma eficaz e eficiente.
+## Índice
+- [Endpoints da API](#endpoints-da-api)
+   - [Cadastro de Depoimento](#cadastro-de-depoimento)
+   - [Depoimentos Aleatórios](#depoimentos-aleatórios)
+   - [Consulta Detalhada de Depoimento por ID](#consulta-detalhada-de-depoimento-por-id)
+   - [Atualização de Depoimento](#atualização-de-depoimento)
+   - [Remoção de Depoimento](#remoção-de-depoimento)
+   - [Registro de Destino](#registro-de-destino)
+   - [Consulta de Destino por Nome](#consulta-de-destino-por-nome)
+   - [Consulta de Destino por ID](#consulta-de-destino-por-id)
+   - [Atualização de Destino](#atualização-de-destino)
+   - [Remoção de Destino](#remoção-de-destino)
+- [Documentação](#documentação)
+- [Executando o projeto localmente](#executando-o-projeto-localmente)
+- [Licença](#licença)
 
+## Endpoints da API
 
-### Destino (Destination)
+### Cadastro de Depoimento
 
-Contém os seguintes atributos:
+`POST /depoimentos`
+
+Permite o cadastro de um novo depoimento. O corpo da requisição deve conter um objeto JSON com `personName` (nome do autor), `testimonialText` (texto do depoimento) e `photoPath` (URL da foto do autor) como campos obrigatórios. Retorna um JSON com os dados do depoimento criado.
+
+**Exemplo de Requisição:**
 
 ```json
-"Id", //Id incremental auto gerado
-"Name", //Nome descritivo do destino
-"PhotoPath", //Link da imagem principal do destino
-"PhotoPath2", //Link da imagem detalhada do destino
-"Meta", //Frase resumindo o destino
-"description", //Descrição opcional mais detalhada do destino
-"price", //Preço da viagem
-"active" //Variável para controle de objetos ativos
+{
+   "personName": "João Silva",
+   "testimonialText": "Experiência incrível!",
+   "photoPath": "caminho/para/imagem.jpg"
+}
 ```
 
-Suporta os seguintes endpoints:
-
-POST ```/destinos```
-Realiza o cadastro de um destino.
-
-GET ```/destinos```
-Retorna todas os destinos cadastrados.
-
-GET ```/destinos/{id}```
-Busca o destino com o id informada no endereço.
-
-PUT ```/destinos/{id}```
-Atualiza o destino cujo id for informado no endereço.
-
-DELETE ```/destinos/{id}```
-Exclui o destino com id informado no endereço.
-
-### Depoimento (Testimonial)
-
-Contém os seguintes atributos:
+**Exemplo de Resposta:**
 
 ```json
-"Id", //Id incremental auto gerado
-"PersonName", //Nome do usuário
-"TestimonialText", //Depoimento escrito pelo usuário
-"ImagePath", //Link da imagem de perfil do usuário 
-"active" //Variável para controle de objetos ativos
+{
+   "id": 1,
+   "personName": "João Silva",
+   "testimonialText": "Experiência incrível!",
+   "photoPath": "caminho/para/imagem.jpg"
+}
+```
+### Depoimentos Aleatórios
+`GET /depoimentos-home`
+
+Retorna até 3 depoimentos selecionados aleatoriamente.
+
+**Exemplo de Resposta:**
+
+```json
+[
+   {
+      "id": 1, 
+      "personName": "João Silva", 
+      "testimonialText": "Experiência incrível!", 
+      "photoPath": "caminho/para/imagem.jpg"
+   },
+   {
+      "id": 4, 
+      "personName": "Maria Souza", 
+      "testimonialText": "Adorei cada momento!", 
+      "photoPath": "caminho/para/imagem2.jpg"
+   },
+   {
+      "id": 10, 
+      "personName": "Carlos Ferreira", 
+      "testimonialText": "Viagem inesquecível!", 
+      "photoPath": "caminho/para/imagem3.jpg"
+   }
+]
 ```
 
-Suporta os seguintes endpoints:
+### Consulta Detalhada de Depoimento por ID
 
-POST ```/depoimentos```
-Realiza o cadastro de um depoimento.
+`GET /depoimentos/{id}`
 
-GET ```/depoimentos```
-Retorna todas os depoimentos cadastrados.
+Retorna o depoimento correspondente ao ID fornecido.
 
-GET ```/depoimentos-home```
-Retorna três depoimentos aleatórios cadastrados.
+**Exemplo de Resposta:**
 
-GET ```/depoimentos/{id}```
-Retorna o depoimento cujo id for informado no endereço.
+```json
+{
+   "id": 1,
+   "personName": "João Silva",
+   "testimonialText": "Experiência incrível!",
+   "photoPath": "caminho/para/imagem.jpg"
+}
+```
 
-PUT ```/depoimentos/{id}```
-Atualiza o depoimento cujo id for informado no endereço.
+### Atualização de Depoimento
+        
+`PUT /depoimentos`
 
-DELETE ```/depoimentos/{id}```
-Exclui o depoimento com id informado no endereço.
+Permite a atualização dos campos `personName` (nome do autor), `testimonialText` (texto do depoimento) e `photoPath` (URL da foto do autor) do depoimento correspondente ao ID informado no corpo da requisição. Retorna um JSON com os dados do depoimento atualizado.
+
+**Exemplo de Requisição:**
+
+```json
+{
+    "id": 1,
+    "testimonialText": "Isso não é mais divertido.",
+    "photoPath": "caminho/nova/imagem.jpg"
+}
+```
+
+**Exemplo de Resposta:**
+
+```json
+{
+   "id": 1,
+   "personName": "João Silva",
+   "testimonialText": "Isso não é mais divertido.",
+   "photoPath": "caminho/nova/imagem.jpg"
+}
+```
+
+### Remoção de Depoimento
+
+`DELETE /depoimentos/{id}`
+
+Permite excluir o depoimento correspondente ao ID fornecido.
+
+### Registro de Destino
+
+`POST /destinos`
+
+Permite o cadastro de um novo destino. O corpo da requisição deve conter um objeto JSON com `name` (nome do destino), `photoPath` (URL da foto do destino), `photoPath2` (URL da segunda foto do destino), `meta` (meta do destino) e `price` (preço do destino) como campos obrigatórios. O campo `description` (descrição do destino) é opcional. Se não fornecido, a API gera automaticamente uma descrição usando a OpenAI API. Para usar essa função, configure sua chave de API da OpenAI na variável de ambiente OPENAI_API_KEY. Retorna um JSON com os dados do destino criado.
+
+**Exemplo de Requisição:**
+
+```json
+{
+   "name": "Paris",
+   "photoPath": "caminho/para/imagem-paris.jpg",
+   "photoPath2": "caminho/para/imagem-paris2.jpg",
+   "meta": "A cidade do amor",
+   "price": "500"
+}
+```
+
+**Exemplo de Resposta:**
+
+```json
+{
+   "id": 1,
+   "name": "Paris",
+   "photoPath": "caminho/para/imagem-paris.jpg",
+   "photoPath2": "caminho/para/imagem-paris2.jpg",
+   "meta": "A cidade do amor",
+   "description": "Paris é uma cidade romântica, conhecida como a cidade do amor. Com suas icônicas ruas de paralelepípedos, cafés charmosos e monumentos mundialmente famosos, como a Torre Eiffel e o Museu do Louvre, Paris cativa os corações dos visitantes.",
+   "price": "500"
+}
+```
+### Consulta de Destino por Nome
+
+`GET /destinos?name={nome}`
+
+Retorna todos os destinos que correspondem ao nome informado como parâmetro no endpoint. Os destinos serão retornados como uma lista JSON no corpo da resposta.
+
+**Exemplo de Resposta:**
+
+```json
+[
+    {
+        "id": 2,
+        "name": "Nova Iorque",
+        "photoPath": "caminho/para/imagem-nova-iorque.jpg",
+        "photoPath2": "caminho/para/imagem-nova-iorque2.jpg",
+        "meta": "A cidade que nunca dorme",
+        "description": "Nova Iorque, a cidade que nunca dorme, é um dos destinos mais vibrantes do mundo. Com arranha-céus deslumbrantes, vida noturna agitada e uma variedade cultural incrível, é uma experiência inesquecível para qualquer viajante.",
+        "price": "800"
+    },
+    {
+        "id": 3,
+        "name": "Nova Orleans",
+        "photoPath": "caminho/para/imagem-nova-orleans.jpg",
+        "photoPath2": "caminho/para/imagem-nova-orleans2.jpg",
+        "meta": "A joia do sul",
+        "description": "Nova Orleans, também conhecida como 'A joia do sul', é famosa por sua rica herança cultural, música vibrante, arquitetura única e, claro, sua culinária extraordinária. Uma visita a Nova Orleans é uma jornada através de uma mistura fascinante de influências culturais.",
+        "price": "700"
+    }
+]
+```
+
+### Consulta de Destino por ID
+
+`GET /destinos/{id}`
+
+Retorna o destino correspondente ao ID fornecido. Será retornado como um objeto JSON no corpo da resposta. É usado para retornar o objeto criado em requisições POST e PUT no endpoint `/destinos`.
+
+**Exemplo de Resposta:**
+
+```json
+{
+   "id": 1,
+   "name": "Vale dos Reis",
+   "photoPath": "caminho/imagem-vale-dos-reis.jpg",
+   "photoPath2": "caminho/imagem-vale-dos-reis2.jpg",
+   "meta": "Explorando a história antiga",
+   "description": "Descubra o fascinante Vale dos Reis, um lugar repleto de túmulos e monumentos antigos. Uma experiência única para os amantes da história.",
+   "price": "500"
+}
+```
+
+### Atualização de Destino
+
+`PUT /destinos`
+
+Permite a atualização dos campos `name` (nome do destino), `photoPath` (URL da foto do destino), `photoPath2` (URL da segunda foto do destino), `meta` (meta do destino), `description` (descrição do destino) e `price` (preço do destino) do destino correspondente ao ID informado no objeto JSON enviado no corpo da requisição. Retorna um JSON com os dados do destino atualizado.
+
+**Exemplo de Requisição:**
+
+```json
+{
+   "name": "Vale dos Reis",
+   "description": "Atualizando a descrição do Vale dos Reis."
+}
+```
+
+**Exemplo de Resposta:**
+
+```json
+{
+   "id": 1,
+   "name": "Vale dos Reis",
+   "photoPath": "caminho/imagem-vale-dos-reis.jpg",
+   "photoPath2": "caminho/imagem-vale-dos-reis2.jpg",
+   "meta": "Explorando a história antiga",
+   "description": "Atualizando a descrição do Vale dos Reis.",
+   "price": "500"
+}
+
+```
+### Remoção de Destino
+
+`DELETE /destinos/{id}`
+
+Permite excluir o destino correspondente ao ID fornecido.
 
 ## Documentação
 
 Este projeto utiliza o [Swagger](https://springdoc.org/) para gerar a documentação, que pode ser acessada pelo link abaixo após executar a API:
 
 [localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-
 
 ## Executando o projeto localmente
 
